@@ -3,25 +3,6 @@ FROM httpd:alpine
 # These variables are inherited from the httpd:alpine image:
 # ENV HTTPD_PREFIX /usr/local/apache2
 # WORKDIR "$HTTPD_PREFIX"
-
-# Set desired UID and GID for www-data
-ARG WWW_DATA_UID=33
-ARG WWW_DATA_GID=33
-
-# Create the group and user in separate RUN instructions
-RUN set -ex; \
-    # Remove the existing group if it exists
-    if getent group www-data >/dev/null; then \
-        delgroup www-data; \
-    fi && \
-    # Remove the existing user if it exists
-    if getent passwd www-data >/dev/null; then \
-        deluser www-data; \
-    fi && \
-    # Create the group with the specified GID
-    addgroup -g ${WWW_DATA_GID} -S www-data && \
-    # Create the user with the specified UID and GID
-    adduser -u ${WWW_DATA_UID} -G www-data -D -h /var/www www-data
     
 # Create the group and user with the specified UID and GID
 RUN set -ex; \
@@ -30,7 +11,8 @@ RUN set -ex; \
     # Create directories for Dav data and lock database.
     mkdir -p "/var/lib/dav/data"; \
     touch "/var/lib/dav/DavLock"; \
-    chown -R www-data:www-data "/var/lib/dav"; \
+    chown  www-data:www-data "/var/lib/dav"; \
+    chown  www-data:www-data "/var/lib/dav/DavLock"; \
     \
     # Enable DAV modules.
     for i in dav dav_fs; do \
