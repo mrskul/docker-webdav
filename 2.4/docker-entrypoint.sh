@@ -103,4 +103,8 @@ fi
 [ ! -e "/var/lib/dav/DavLock" ] && touch "/var/lib/dav/DavLock"
 chown www-data:www-data "/var/lib/dav" "/var/lib/dav/data" "/var/lib/dav/DavLock"
 
+# Allow 33 to control
+chown -R 33:33 "/var/lib/dav/data" 
+chmod -R +r "/var/lib/dav/data"
+
 exec "$@"
