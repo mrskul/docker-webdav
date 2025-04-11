@@ -10,7 +10,7 @@ ARG WWW_DATA_GID=33
 
 # Create the group and user in separate RUN instructions
 RUN set -ex; \
-    addgroup -g ${WWW_DATA_GID} www-data
+    addgroup -g ${WWW_DATA_GID} www-data \
     adduser -u ${WWW_DATA_UID} -g www-data -h /var/www www-data
     
 # Create the group and user with the specified UID and GID
