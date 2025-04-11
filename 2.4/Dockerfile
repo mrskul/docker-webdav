@@ -10,8 +10,18 @@ ARG WWW_DATA_GID=33
 
 # Create the group and user in separate RUN instructions
 RUN set -ex; \
-    addgroup -g ${WWW_DATA_GID} www-data; \
-    adduser -u ${WWW_DATA_UID} -g www-data -h /var/www www-data
+    # Remove the existing group if it exists
+    if getent group www-data >/dev/null; then \
+        delgroup www-data; \
+    fi && \
+    # Remove the existing user if it exists
+    if getent passwd www-data >/dev/null; then \
+        deluser www-data; \
+    fi && \
+    # Create the group with the specified GID
+    addgroup -g ${WWW_DATA_GID} -S www-data && \
+    # Create the user with the specified UID and GID
+    adduser -u ${WWW_DATA_UID} -G www-data -D -h /var/www www-data
     
 # Create the group and user with the specified UID and GID
 RUN set -ex; \
