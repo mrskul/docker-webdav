@@ -4,10 +4,14 @@ FROM httpd:alpine
 # ENV HTTPD_PREFIX /usr/local/apache2
 # WORKDIR "$HTTPD_PREFIX"
 
-# Copy in our configuration files.
-COPY conf/ conf/
+# Set desired UID and GID for www-data
+ARG WWW_DATA_UID=33
+ARG WWW_DATA_GID=33
 
+# Create the group and user with the specified UID and GID
 RUN set -ex; \
+    addgroup -g ${WWW_DATA_GID} www-data; \
+    adduser -u ${WWW_DATA_UID} -G www-data -D www-data; \
     # Create empty default DocumentRoot.
     mkdir -p "/var/www/html"; \
     # Create directories for Dav data and lock database.
