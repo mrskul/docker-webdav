@@ -3,16 +3,17 @@ FROM httpd:alpine
 # These variables are inherited from the httpd:alpine image:
 # ENV HTTPD_PREFIX /usr/local/apache2
 # WORKDIR "$HTTPD_PREFIX"
-    
-# Create the group and user with the specified UID and GID
+
+# Copy in our configuration files.
+COPY conf/ conf/
+
 RUN set -ex; \
     # Create empty default DocumentRoot.
     mkdir -p "/var/www/html"; \
     # Create directories for Dav data and lock database.
     mkdir -p "/var/lib/dav/data"; \
     touch "/var/lib/dav/DavLock"; \
-    chown  www-data:www-data "/var/lib/dav"; \
-    chown  www-data:www-data "/var/lib/dav/DavLock"; \
+    chown www-data:www-data "/var/lib/dav" "/var/lib/dav/DavLock"; \
     \
     # Enable DAV modules.
     for i in dav dav_fs; do \
